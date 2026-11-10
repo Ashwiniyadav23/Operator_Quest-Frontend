@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-const API = `${(import.meta.env.VITE_API_URL || "http://localhost:5001").replace(/\/$/, "")}/api`;
+const API = `${(import.meta.env.VITE_API_URL || "").replace(/\/$/, "")}/api`;
 const CATEGORIES = [
   { id:"arithmetic", name:"Arithmetic", icon:"➗", tint:"#eeeaff", desc:"Calculate, divide and find remainders.", operators:["+","-","*","/","//","%","**"] },
   { id:"comparison", name:"Comparison", icon:"⚖️", tint:"#e7f7f2", desc:"Compare values and evaluate conditions.", operators:[">","<",">=","<=","==","!="] },
