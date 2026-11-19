@@ -2,11 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 
 const API = `${(import.meta.env.VITE_API_URL || "").replace(/\/$/, "")}/api`;
 const CATEGORIES = [
-  { id:"arithmetic", name:"Arithmetic", icon:"➗", tint:"#eeeaff", desc:"Calculate, divide and find remainders.", operators:["+","-","*","/","//","%","**"] },
-  { id:"comparison", name:"Comparison", icon:"⚖️", tint:"#e7f7f2", desc:"Compare values and evaluate conditions.", operators:[">","<",">=","<=","==","!="] },
-  { id:"logical", name:"Logical", icon:"🧩", tint:"#fff3df", desc:"Combine conditions with AND, OR and NOT.", operators:["AND","OR","NOT"] },
-  { id:"assignment", name:"Assignment", icon:"📝", tint:"#eaf1ff", desc:"Store and update variable values.", operators:["=","+=","-=","*=","/=","//=","%=","**="] },
-  { id:"ternary", name:"Ternary", icon:"🔀", tint:"#ffeaf1", desc:"Choose a value using a one-line condition.", operators:["if/else"] }
+  { id:"arithmetic", name:"Arithmetic", icon:"➗", tint:"#eeeaff", desc:"Work out totals, groups and remainders in a flowchart.", operators:["+","-","*","/","//","%","**"] },
+  { id:"comparison", name:"Comparisons", icon:"⚖️", tint:"#e7f7f2", desc:"Compare values in a decision diamond and choose a path.", operators:[">","<",">=","<=","==","!="] },
+  { id:"logical", name:"Logic", icon:"🧩", tint:"#fff3df", desc:"Combine yes or no conditions with AND, OR and NOT.", operators:["AND","OR","NOT"] },
+  { id:"assignment", name:"Flowchart actions", icon:"📝", tint:"#eaf1ff", desc:"Show how a process block stores or changes a value.", operators:["=","+=","-=","*=","/=","//=","%=","**="] },
+  { id:"ternary", name:"Decisions & paths", icon:"🔀", tint:"#ffeaf1", desc:"Follow the yes or no branch from a decision diamond.", operators:["if/else"] }
 ];
 const OPERATOR_COUNT = CATEGORIES.reduce((count, category) => count + category.operators.length, 0);
 const getStudentId = () => {
@@ -148,7 +148,7 @@ export default function App() {
 
   return <div className="shell">
     <header className="topbar">
-      <button className="brand" onClick={backHome}><span className="brandIcon">⚡</span><span><b>Operator Quest</b><small>AI-powered operator arena</small></span></button>
+      <button className="brand" onClick={backHome}><span className="brandIcon">⚡</span><span><b>Operator Quest</b><small>Flowchart learning arena</small></span></button>
       <div className="stats"><span>⭐ <b>{progress.totalXp || 0}</b> XP</span><span>🏆 <b>{completedCount}/5</b> categories</span></div>
     </header>
 
@@ -156,13 +156,13 @@ export default function App() {
       <section className="hero">
         <div className="heroContent">
           <p className="eyebrow"><span className="liveDot"/> YOUR PERSONAL OPERATOR ARENA</p>
-          <h1>Think in operators.<br/><em>Level up your code.</em></h1>
-          <p>Build confidence one challenge at a time. Practise with fresh questions, learn from every answer, and keep your progress as you go.</p>
+          <h1>Build clear logic.<br/><em>One flow at a time.</em></h1>
+          <p>Learn how flowcharts make decisions and process information. Practise with familiar situations, follow each path, and build confidence step by step.</p>
           <div className="heroActions">
             <button className="heroCta" onClick={()=>document.getElementById("training")?.scrollIntoView({behavior:"smooth",block:"start"})}>Choose a challenge <span>↓</span></button>
-            <button className="heroTutor" onClick={()=>setTutorOpen(true)}><span>✦</span> Ask the AI tutor</button>
+          <button className="heroTutor" onClick={()=>setTutorOpen(true)}><span>✦</span> Ask the flowchart guide</button>
           </div>
-          <div className="heroFacts"><span>✦ {CATEGORIES.length} learning tracks</span><i/><span>⌘ {OPERATOR_COUNT} operators</span><i/><span>◷ 10 questions per run</span></div>
+          <div className="heroFacts"><span>✦ {CATEGORIES.length} learning tracks</span><i/><span>⌘ {OPERATOR_COUNT} flowchart symbols</span><i/><span>◷ 10 questions per run</span></div>
         </div>
         <aside className="heroSnapshot" aria-label="Your learning summary">
           <div className="snapshotTop"><span>YOUR QUEST</span><span className="snapshotSpark">✦</span></div>
@@ -173,13 +173,13 @@ export default function App() {
       </section>
       <section className="journey"><div className="journeyHead"><div><b>Your learning journey</b><small>{completedCount} of 5 tracks completed <span className="journeyDetail">· Keep going at your own pace</span></small></div><strong>{completedCount * 20}%</strong></div><div className="track" role="progressbar" aria-label="Learning journey progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow={completedCount * 20}><i style={{width:`${completedCount * 20}%`}}/></div></section>
       {error && <div className="error">{error}</div>}
-      <div className="sectionTitle trainingTitle" id="training"><div><p className="eyebrow">PICK YOUR NEXT CHALLENGE</p><h2>Explore operator tracks</h2><p className="sectionSub">Choose a topic, pick an operator, and start practising.</p></div><span className="trackCount">{CATEGORIES.length} TRACKS <i/> {OPERATOR_COUNT} OPERATORS</span></div>
+      <div className="sectionTitle trainingTitle" id="training"><div><p className="eyebrow">PICK YOUR NEXT CHALLENGE</p><h2>Explore flowchart concepts</h2><p className="sectionSub">Choose a concept, pick a symbol, and trace what happens next.</p></div><span className="trackCount">{CATEGORIES.length} TRACKS <i/> {OPERATOR_COUNT} SYMBOLS</span></div>
       <section className="grid">{CATEGORIES.map((cat, categoryIndex) => {
         const p = progress.categories?.[cat.id] || {};
         return <article className="category" key={cat.id}>
           <div className="catHead"><span className="catIcon" style={{background:cat.tint}}>{cat.icon}</span><span className="catIndex">TRACK 0{categoryIndex + 1}</span></div>
           <h3>{cat.name}</h3><p>{cat.desc}</p>
-          <div className="operatorCaption"><span>CHOOSE AN OPERATOR</span><span>{cat.operators.length} {cat.operators.length === 1 ? "OPTION" : "OPTIONS"}</span></div>
+          <div className="operatorCaption"><span>CHOOSE A SYMBOL</span><span>{cat.operators.length} {cat.operators.length === 1 ? "OPTION" : "OPTIONS"}</span></div>
           <div className="operatorList">
             {cat.operators.map(operator => {
               const session = getSavedSession(studentId, cat.id, operator);
@@ -208,13 +208,13 @@ export default function App() {
     {screen === "complete" && <section className="complete"><div className="trophy">🏆</div><p className="eyebrow">CATEGORY CLEARED</p><h2>{correct>=8?"Excellent work!":"Challenge completed!"}</h2>    <p>You finished all 10 {activeOperator} questions.</p><div className="resultStats"><div><b>{correct}/10</b><small>Correct answers</small></div><div><b>{earned}</b><small>XP earned</small></div></div><button className="primary" onClick={()=>startCategory(active,activeOperator,true)}>Generate a new question set ↻</button><button className="secondary" onClick={backHome}>Back to categories</button></section>}
     <button className={`chatLauncher ${tutorOpen ? "open" : ""}`} onClick={()=>setTutorOpen(open=>!open)} aria-label={tutorOpen ? "Close AI tutor" : "Ask your AI tutor"} title="Ask your AI tutor">💬</button>
     {tutorOpen && <aside className="chatPanel">
-      <div className="chatHeader"><div><b>AI Tutor</b><small>Ask a programming question</small></div><button onClick={()=>setTutorOpen(false)} aria-label="Close AI tutor">×</button></div>
+      <div className="chatHeader"><div><b>Flowchart Guide</b><small>Understand symbols, choices and paths</small></div><button onClick={()=>setTutorOpen(false)} aria-label="Close flowchart guide">×</button></div>
       <form onSubmit={askTutor} className="chatForm">
-        <textarea value={tutorQuestion} onChange={e=>setTutorQuestion(e.target.value)} maxLength={1000} placeholder="Ask me to explain an operator..." required />
+        <textarea value={tutorQuestion} onChange={e=>setTutorQuestion(e.target.value)} maxLength={1000} placeholder="Ask how a flowchart symbol or decision works..." required />
         <button className="primary" disabled={tutorLoading}>{tutorLoading ? "Thinking…" : "Send question"}</button>
       </form>
       {tutorAnswer && <div className="chatResponse"><p>{tutorAnswer.explanation}</p><div className="tutorQuestions">{tutorAnswer.questions.map((item, i)=><div key={i}><b>{i + 1}. {item.question}</b><small>Answer: {item.answer}</small></div>)}</div></div>}
     </aside>}
-    <footer><span>Operator Quest · Learn by playing</span><span>Fresh questions generated with Gemini ✨</span></footer>
+    <footer><span>Operator Quest · Learn to think in flowcharts</span><span>Fresh practice questions ✨</span></footer>
   </div>;
 }
