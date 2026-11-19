@@ -236,8 +236,12 @@ footer { display:flex; justify-content:space-between; color:#9698aa; font-size:1
 .catIndex { color:#a0a1b2; font-size:8px; font-weight:800; letter-spacing:1px; }
 .category h3 { margin-top:12px; }
 .operatorCaption { display:flex; justify-content:space-between; margin-top:17px; color:#999aad; font-size:8px; font-weight:800; letter-spacing:.65px; }
-.operatorList { min-height:32px; margin-top:7px; }
-.operatorList button { padding:6px 9px; }
+.operatorList { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); min-height:32px; margin-top:7px; }
+.operatorList button { min-width:0; min-height:38px; padding:6px 8px; display:flex; align-items:center; gap:7px; text-align:left; white-space:normal; }
+.operatorSymbol { flex:0 0 auto; min-width:25px; color:#493798; font:700 11px 'Space Grotesk'; text-align:center; }
+.operatorLabels { min-width:0; display:flex; flex-direction:column; gap:2px; }
+.operatorName { color:#6551cb; font-size:9px; font-weight:700; line-height:1.2; }
+.operatorLabels small { color:#17815e; font-size:7px; font-weight:700; line-height:1.2; }
 .catFoot { margin-top:11px; padding-top:10px; }
 .catFoot .trackProgress,.catFoot .trackComplete { color:#7c7d91; font-size:8px; font-weight:800; letter-spacing:.5px; }
 .catFoot .trackComplete { color:#19815f; }

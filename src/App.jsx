@@ -8,6 +8,15 @@ const CATEGORIES = [
   { id:"assignment", name:"Flowchart actions", icon:"📝", tint:"#eaf1ff", desc:"Show how a process block stores or changes a value.", operators:["=","+=","-=","*=","/=","//=","%=","**="] },
   { id:"ternary", name:"Decisions & paths", icon:"🔀", tint:"#ffeaf1", desc:"Follow the yes or no branch from a decision diamond.", operators:["if/else"] }
 ];
+const OPERATOR_NAMES = {
+  "+": "Addition", "-": "Subtraction", "*": "Multiplication", "/": "Division",
+  "//": "Floor division", "%": "Modulo / remainder", "**": "Exponentiation / power",
+  ">": "Greater than", "<": "Less than", ">=": "Greater than or equal", "<=": "Less than or equal",
+  "==": "Equality", "!=": "Inequality", AND: "Logical AND", OR: "Logical OR", NOT: "Logical NOT",
+  "=": "Assignment", "+=": "Addition assignment", "-=": "Subtraction assignment", "*=": "Multiplication assignment",
+  "/=": "Division assignment", "//=": "Floor division assignment", "%=": "Modulo assignment", "**=": "Exponentiation assignment",
+  "if/else": "Conditional branch"
+};
 const OPERATOR_COUNT = CATEGORIES.reduce((count, category) => count + category.operators.length, 0);
 const getStudentId = () => {
   let id = localStorage.getItem("oq_student_id");
@@ -184,7 +193,9 @@ export default function App() {
           <div className="operatorList">
             {cat.operators.map(operator => {
               const session = getSavedSession(studentId, cat.id, operator);
-              return <button key={operator} disabled={loading} onClick={()=>startCategory(cat.id, operator, !!p.completed && !session)}>{operator}{session ? ` · Resume ${session.index + 1}/10` : ""}</button>;
+              return <button key={operator} disabled={loading} title={`${operator}: ${OPERATOR_NAMES[operator]}`} onClick={()=>startCategory(cat.id, operator, !!p.completed && !session)}>
+                <span className="operatorSymbol">{operator}</span><span className="operatorLabels"><span className="operatorName">{OPERATOR_NAMES[operator]}</span>{session && <small>Resume {session.index + 1}/10</small>}</span>
+              </button>;
             })}
           </div>
           <div className="catFoot"><span className={p.completed?"trackComplete":"trackProgress"}>{p.completed?"✓ TRACK CLEARED":"↗ KEEP BUILDING"}</span><span>{p.correct || 0} correct <i/> {p.xp || 0} XP</span></div>
@@ -193,7 +204,7 @@ export default function App() {
     </>}
 
     {screen === "quiz" && <section className="quiz">
-      <div className="quizNav"><button onClick={backHome}>← All categories</button><span>{CATEGORIES.find(c=>c.id===active)?.name?.toUpperCase()} · {activeOperator}</span></div>
+      <div className="quizNav"><button onClick={backHome}>← All categories</button><span>{CATEGORIES.find(c=>c.id===active)?.name?.toUpperCase()} · {activeOperator} · {OPERATOR_NAMES[activeOperator]}</span></div>
       {loading ? <div className="loading"><div className="spinner"/><h2>Gemini is creating your questions…</h2><p>Building 10 fresh challenges for this category.</p></div> :
       questions.length > 0 && current && <>
         <div className="quizMeta"><span>Question {index+1} of 10</span><span>⭐ {earned} XP this round</span></div>
