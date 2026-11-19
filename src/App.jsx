@@ -13,6 +13,11 @@ const getStudentId = () => {
   if (!id) { id = `student-${crypto.randomUUID()}`; localStorage.setItem("oq_student_id", id); }
   return id;
 };
+const sessionKey = (studentId, category, operator) => `oq_session_${studentId}_${category}_${encodeURIComponent(operator)}`;
+const getSavedSession = (studentId, category, operator) => {
+  try { return JSON.parse(localStorage.getItem(sessionKey(studentId, category, operator)) || "null"); }
+  catch { return null; }
+};
 
 export default function App() {
   const studentId = useMemo(getStudentId, []);
@@ -64,6 +69,19 @@ export default function App() {
     setActiveOperator(operator);
     setQuestions([]); setIndex(0); setSelected(null); setCorrect(0); setEarned(0);
     try {
+      const key = sessionKey(studentId, category, operator);
+      if (!reset) {
+        const session = getSavedSession(studentId, category, operator);
+        if (session) {
+          if (Array.isArray(session.questions) && session.questions.length === 10 && session.index < 10) {
+            setQuestions(session.questions); setIndex(session.index); setSelected(session.selected ?? null);
+            setCorrect(session.correct || 0); setEarned(session.earned || 0);
+            setLoading(false);
+            return;
+          }
+        }
+      }
+      if (reset) localStorage.removeItem(key);
       const resetRequest = reset ? fetch(`${API}/progress/reset-category`, {
           method:"POST", headers:{"Content-Type":"application/json"},
           body:JSON.stringify({ studentId, category })
@@ -76,6 +94,7 @@ export default function App() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Question generation failed.");
       setQuestions(data.questions);
+      localStorage.setItem(key, JSON.stringify({ questions: data.questions, index: 0, selected: null, correct: 0, earned: 0 }));
     } catch (e) {
       setError(e.message || "Unable to generate questions.");
       setScreen("home");
@@ -86,7 +105,10 @@ export default function App() {
     if (selected !== null || !current) return;
     setSelected(optionIndex);
     const isCorrect = optionIndex === current.answerIndex;
-    if (isCorrect) { setCorrect(v => v + 1); setEarned(v => v + 10); }
+    const nextCorrect = correct + (isCorrect ? 1 : 0);
+    const nextEarned = earned + (isCorrect ? 10 : 0);
+    if (isCorrect) { setCorrect(nextCorrect); setEarned(nextEarned); }
+    localStorage.setItem(sessionKey(studentId, active, activeOperator), JSON.stringify({ questions, index, selected: optionIndex, correct: nextCorrect, earned: nextEarned }));
     try {
       const res = await fetch(`${API}/progress/answer`, {
         method:"POST", headers:{"Content-Type":"application/json"},
@@ -102,7 +124,11 @@ export default function App() {
   }
 
   async function nextQuestion() {
-    if (index < 9) { setIndex(v => v + 1); setSelected(null); }
+    if (index < 9) {
+      const nextIndex = index + 1;
+      setIndex(nextIndex); setSelected(null);
+      localStorage.setItem(sessionKey(studentId, active, activeOperator), JSON.stringify({ questions, index: nextIndex, selected: null, correct, earned }));
+    }
     else {
       try {
         await fetch(`${API}/progress/complete-category`, {
@@ -111,11 +137,12 @@ export default function App() {
         });
       } catch {}
       await loadProgress();
+      localStorage.removeItem(sessionKey(studentId, active, activeOperator));
       setScreen("complete");
     }
   }
 
-  function backHome() { setScreen("home"); setActive(null); setActiveOperator(null); setQuestions([]); setError(""); }
+  function backHome() { setScreen("home"); setError(""); }
   const scoreNow = correct + (selected !== null && selected === current?.answerIndex ? 0 : 0);
 
   return <div className="shell">
@@ -135,7 +162,10 @@ export default function App() {
           <div className="catHead"><span className="catIcon" style={{background:cat.tint}}>{cat.icon}</span><span className={p.completed?"done":"count"}>{p.completed?"✓ COMPLETED":"10 QUESTIONS"}</span></div>
           <h3>{cat.name}</h3><p>{cat.desc}</p>
           <div className="operatorList">
-            {cat.operators.map(operator => <button key={operator} onClick={()=>startCategory(cat.id, operator, !!p.completed)}>{operator}</button>)}
+            {cat.operators.map(operator => {
+              const session = getSavedSession(studentId, cat.id, operator);
+              return <button key={operator} onClick={()=>startCategory(cat.id, operator, !!p.completed && !session)}>{operator}{session ? ` · Resume ${session.index + 1}/10` : ""}</button>;
+            })}
           </div>
           <div className="catFoot"><span>{p.correct || 0} correct · {p.xp || 0} XP</span><small>10 questions per operator</small></div>
         </article>;
