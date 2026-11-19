@@ -183,7 +183,7 @@ export default function App() {
           <div className="operatorList">
             {cat.operators.map(operator => {
               const session = getSavedSession(studentId, cat.id, operator);
-              return <button key={operator} onClick={()=>startCategory(cat.id, operator, !!p.completed && !session)}>{operator}{session ? ` · Resume ${session.index + 1}/10` : ""}</button>;
+              return <button key={operator} disabled={loading} onClick={()=>startCategory(cat.id, operator, !!p.completed && !session)}>{operator}{session ? ` · Resume ${session.index + 1}/10` : ""}</button>;
             })}
           </div>
           <div className="catFoot"><span className={p.completed?"trackComplete":"trackProgress"}>{p.completed?"✓ TRACK CLEARED":"↗ KEEP BUILDING"}</span><span>{p.correct || 0} correct <i/> {p.xp || 0} XP</span></div>

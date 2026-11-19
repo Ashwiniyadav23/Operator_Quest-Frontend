@@ -76,6 +76,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 .operatorList { display:flex; flex-wrap:wrap; gap:6px; margin-top:13px; }
 .operatorList button { border:1px solid #e8e4fb; background:#faf9ff; color:#6551cb; border-radius:8px; padding:6px 9px; font-size:11px; font-weight:800; cursor:pointer; transition:background .15s,border-color .15s,transform .15s; }
 .operatorList button:hover { background:#efecff; border-color:#d5cff9; transform:translateY(-1px); }
+.operatorList button:disabled { opacity:.55; cursor:wait; transform:none; }
 .catFoot { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:15px; padding-top:11px; border-top:1px solid #f0eff5; }
 .catFoot span,.catFoot small { font-size:9px; color:var(--muted); }
 .catFoot button,.quizNav button { border:0; background:none; color:var(--purple); font-size:11px; font-weight:800; cursor:pointer; padding:5px 0; }
