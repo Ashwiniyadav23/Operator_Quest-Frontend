@@ -35,6 +35,7 @@ export default function App() {
   const [screen, setScreen] = useState("home");
   const [tutorQuestion, setTutorQuestion] = useState("");
   const [tutorAnswer, setTutorAnswer] = useState(null);
+  const [tutorError, setTutorError] = useState("");
   const [tutorLoading, setTutorLoading] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
 
@@ -51,7 +52,7 @@ export default function App() {
 
   async function askTutor(event) {
     event.preventDefault();
-    setTutorLoading(true); setTutorAnswer(null); setError("");
+    setTutorLoading(true); setTutorAnswer(null); setTutorError("");
     try {
       const res = await fetch(`${API}/tutor/ask`, {
         method:"POST", headers:{"Content-Type":"application/json"},
@@ -61,7 +62,7 @@ export default function App() {
       if (!res.ok) throw new Error(data.message || "Tutor request failed.");
       setTutorAnswer(data);
     } catch (e) {
-      setError(e.message || "Unable to answer your question.");
+      setTutorError(e.message || "Unable to answer your question.");
     } finally { setTutorLoading(false); }
   }
 
@@ -213,7 +214,8 @@ export default function App() {
         <textarea value={tutorQuestion} onChange={e=>setTutorQuestion(e.target.value)} maxLength={1000} placeholder="Ask how a flowchart symbol or decision works..." required />
         <button className="primary" disabled={tutorLoading}>{tutorLoading ? "Thinking…" : "Send question"}</button>
       </form>
-      {tutorAnswer && <div className="chatResponse"><p>{tutorAnswer.explanation}</p><div className="tutorQuestions">{tutorAnswer.questions.map((item, i)=><div key={i}><b>{i + 1}. {item.question}</b><small>Answer: {item.answer}</small></div>)}</div></div>}
+      {tutorError && <div className="chatError" role="alert">{tutorError}</div>}
+      {tutorAnswer && <div className="chatResponse" role="status"><p>{tutorAnswer.explanation}</p></div>}
     </aside>}
     <footer><span>Operator Quest · Learn to think in flowcharts</span><span>Fresh practice questions ✨</span></footer>
   </div>;
