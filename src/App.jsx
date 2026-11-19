@@ -211,7 +211,7 @@ export default function App() {
     {tutorOpen && <aside className="chatPanel">
       <div className="chatHeader"><div><b>Flowchart Guide</b><small>Understand symbols, choices and paths</small></div><button onClick={()=>setTutorOpen(false)} aria-label="Close flowchart guide">×</button></div>
       <form onSubmit={askTutor} className="chatForm">
-        <textarea value={tutorQuestion} onChange={e=>setTutorQuestion(e.target.value)} maxLength={1000} placeholder="Ask how a flowchart symbol or decision works..." required />
+        <textarea value={tutorQuestion} onChange={e=>setTutorQuestion(e.target.value)} maxLength={1000} placeholder="Ask what a symbol means or why we use it in a flowchart..." required />
         <button className="primary" disabled={tutorLoading}>{tutorLoading ? "Thinking…" : "Send question"}</button>
       </form>
       {tutorError && <div className="chatError" role="alert">{tutorError}</div>}
