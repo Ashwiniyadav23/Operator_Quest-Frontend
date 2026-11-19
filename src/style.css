@@ -195,3 +195,80 @@ footer { display:flex; justify-content:space-between; color:#9698aa; font-size:1
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
 }
+
+/* Home screen refinements */
+.hero { gap:32px; padding:39px 44px; }
+.heroContent { flex:1; min-width:0; }
+.hero .eyebrow { display:flex; align-items:center; gap:8px; color:#c3baff; }
+.liveDot { width:7px; height:7px; border-radius:50%; background:#80e3ba; box-shadow:0 0 0 4px rgba(128,227,186,.15); }
+.heroActions { display:flex; align-items:center; gap:17px; margin-top:21px; }
+.heroCta,.heroTutor { border:0; cursor:pointer; font-weight:800; transition:transform .16s,background .16s,box-shadow .16s; }
+.heroCta { display:flex; align-items:center; gap:18px; border-radius:11px; background:#fff; color:#40347f; padding:12px 15px; font-size:12px; box-shadow:0 6px 18px rgba(14,10,45,.16); }
+.heroCta span { font-size:17px; line-height:12px; }
+.heroCta:hover { transform:translateY(-2px); box-shadow:0 9px 22px rgba(14,10,45,.24); }
+.heroTutor { background:transparent; color:#e0dcff; font-size:11px; padding:8px 0; }
+.heroTutor span { color:#ffdc7b; margin-right:4px; }
+.heroTutor:hover { color:white; transform:translateY(-1px); }
+.heroFacts { display:flex; align-items:center; gap:11px; margin-top:22px; color:#c4bfdf; font-size:9px; font-weight:600; }
+.heroFacts i,.snapshotStats>i,.trackCount i,.catFoot i { display:inline-block; width:3px; height:3px; border-radius:50%; background:rgba(223,220,255,.55); }
+.heroSnapshot { flex:0 0 205px; display:flex; flex-direction:column; align-items:center; padding:17px 17px 14px; border:1px solid rgba(255,255,255,.18); border-radius:19px; background:linear-gradient(160deg,rgba(255,255,255,.13),rgba(255,255,255,.055)); box-shadow:inset 0 1px rgba(255,255,255,.12); backdrop-filter:blur(8px); }
+.snapshotTop { width:100%; display:flex; justify-content:space-between; align-items:center; color:#d8d2f3; font-size:8px; font-weight:800; letter-spacing:1.2px; }
+.snapshotSpark { color:#ffdc7b; font-size:15px; }
+.levelRing { width:112px; height:112px; display:grid; place-items:center; border-radius:50%; margin:15px 0 10px; background:conic-gradient(#d6ceff var(--level-progress),rgba(255,255,255,.17) 0); position:relative; }
+.levelRing::before { content:""; position:absolute; inset:7px; border-radius:50%; background:#4a3b91; box-shadow:inset 0 1px 8px rgba(20,15,61,.2); }
+.levelRing>div { position:relative; display:flex; flex-direction:column; align-items:center; gap:1px; }
+.levelRing b { color:white; font:700 23px 'Space Grotesk'; }
+.levelRing small { color:#c9c3e9; font-size:8px; text-transform:uppercase; letter-spacing:.9px; }
+.heroSnapshot>p { color:#e5e1fa; text-align:center; font:600 11px/1.45 'Space Grotesk'; margin:0 0 13px; }
+.snapshotStats { width:100%; display:flex; justify-content:center; align-items:center; gap:14px; border-top:1px solid rgba(255,255,255,.15); padding-top:11px; }
+.snapshotStats>span { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.snapshotStats b { color:#fff; font:700 14px 'Space Grotesk'; }
+.snapshotStats b small { color:#c9c3e9; font:500 9px 'DM Sans'; }
+.snapshotStats span>small { color:#c9c3e9; font-size:8px; }
+.journeyDetail { color:#a2a3b6; }
+.trainingTitle { scroll-margin-top:20px; align-items:center; margin:0 0 17px; }
+.trainingTitle .sectionSub { margin:5px 0 0; color:var(--muted); font-size:11px; }
+.trackCount { display:flex; align-items:center; gap:9px; color:#777991; background:#fff; border:1px solid var(--line); border-radius:999px; padding:9px 12px; font-size:8px; font-weight:800; letter-spacing:.6px; }
+.trackCount i { background:#bab7ca; }
+.category { position:relative; padding:19px 19px 15px; }
+.catIndex { color:#a0a1b2; font-size:8px; font-weight:800; letter-spacing:1px; }
+.category h3 { margin-top:12px; }
+.operatorCaption { display:flex; justify-content:space-between; margin-top:17px; color:#999aad; font-size:8px; font-weight:800; letter-spacing:.65px; }
+.operatorList { min-height:32px; margin-top:7px; }
+.operatorList button { padding:6px 9px; }
+.catFoot { margin-top:11px; padding-top:10px; }
+.catFoot .trackProgress,.catFoot .trackComplete { color:#7c7d91; font-size:8px; font-weight:800; letter-spacing:.5px; }
+.catFoot .trackComplete { color:#19815f; }
+.catFoot>span:last-child { display:flex; align-items:center; gap:5px; }
+.catFoot i { background:#c4c2d1; width:2px; height:2px; }
+
+@media (max-width:760px) {
+  .hero { gap:20px; padding:30px 27px; }
+  .heroSnapshot { flex-basis:178px; padding:14px; }
+  .levelRing { width:98px; height:98px; }
+  .heroFacts { flex-wrap:wrap; gap:7px; }
+}
+@media (max-width:540px) {
+  .hero { align-items:stretch; gap:18px; padding:24px 20px; }
+  .heroContent { width:100%; }
+  .heroActions { gap:12px; margin-top:18px; }
+  .heroCta { gap:9px; padding:11px 12px; font-size:11px; }
+  .heroTutor { font-size:10px; }
+  .heroFacts { font-size:8px; margin-top:17px; }
+  .heroFacts i { display:none; }
+  .heroSnapshot { flex:0 0 102px; padding:12px 8px; align-self:center; }
+  .snapshotTop { justify-content:center; font-size:7px; }
+  .snapshotSpark,.heroSnapshot>p,.snapshotStats { display:none; }
+  .levelRing { width:78px; height:78px; margin:10px 0 0; }
+  .levelRing::before { inset:5px; }
+  .levelRing b { font-size:17px; }
+  .levelRing small { font-size:6px; }
+  .journeyDetail { display:none; }
+  .trainingTitle { align-items:flex-start; }
+  .trackCount { padding:7px 10px; font-size:7px; }
+  .operatorCaption { margin-top:14px; }
+}
+@media (max-width:390px) {
+  .heroSnapshot { display:none; }
+  .heroFacts { max-width:280px; }
+}

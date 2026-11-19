@@ -8,6 +8,7 @@ const CATEGORIES = [
   { id:"assignment", name:"Assignment", icon:"📝", tint:"#eaf1ff", desc:"Store and update variable values.", operators:["=","+=","-=","*=","/=","//=","%=","**="] },
   { id:"ternary", name:"Ternary", icon:"🔀", tint:"#ffeaf1", desc:"Choose a value using a one-line condition.", operators:["if/else"] }
 ];
+const OPERATOR_COUNT = CATEGORIES.reduce((count, category) => count + category.operators.length, 0);
 const getStudentId = () => {
   let id = localStorage.getItem("oq_student_id");
   if (!id) { id = `student-${crypto.randomUUID()}`; localStorage.setItem("oq_student_id", id); }
@@ -152,22 +153,40 @@ export default function App() {
     </header>
 
     {screen === "home" && <>
-      <section className="hero"><div><p className="eyebrow">THE OPERATOR ARENA · POWERED BY GEMINI</p><h1>Master every operator.<br/><em>One challenge at a time.</em></h1><p>Fresh AI-generated questions every time you play. Practise without writing code and learn from every answer.</p></div><div className="heroEmoji">🧠<span>✦</span>⚡</div></section>
-      <section className="journey"><div className="journeyHead"><div><b>Your learning journey</b><small>{completedCount * 10} of 50 category questions completed</small></div><strong>{completedCount * 20}%</strong></div><div className="track"><i style={{width:`${completedCount * 20}%`}}/></div></section>
+      <section className="hero">
+        <div className="heroContent">
+          <p className="eyebrow"><span className="liveDot"/> YOUR PERSONAL OPERATOR ARENA</p>
+          <h1>Think in operators.<br/><em>Level up your code.</em></h1>
+          <p>Build confidence one challenge at a time. Practise with fresh questions, learn from every answer, and keep your progress as you go.</p>
+          <div className="heroActions">
+            <button className="heroCta" onClick={()=>document.getElementById("training")?.scrollIntoView({behavior:"smooth",block:"start"})}>Choose a challenge <span>↓</span></button>
+            <button className="heroTutor" onClick={()=>setTutorOpen(true)}><span>✦</span> Ask the AI tutor</button>
+          </div>
+          <div className="heroFacts"><span>✦ {CATEGORIES.length} learning tracks</span><i/><span>⌘ {OPERATOR_COUNT} operators</span><i/><span>◷ 10 questions per run</span></div>
+        </div>
+        <aside className="heroSnapshot" aria-label="Your learning summary">
+          <div className="snapshotTop"><span>YOUR QUEST</span><span className="snapshotSpark">✦</span></div>
+          <div className="levelRing" style={{"--level-progress":`${completedCount * 20}%`}}><div><b>{completedCount * 20}%</b><small>mastered</small></div></div>
+          <p>Every expert starts<br/>with one small step.</p>
+          <div className="snapshotStats"><span><b>{progress.totalXp || 0}</b><small>total XP</small></span><i/><span><b>{completedCount}<small> / 5</small></b><small>tracks cleared</small></span></div>
+        </aside>
+      </section>
+      <section className="journey"><div className="journeyHead"><div><b>Your learning journey</b><small>{completedCount} of 5 tracks completed <span className="journeyDetail">· Keep going at your own pace</span></small></div><strong>{completedCount * 20}%</strong></div><div className="track" role="progressbar" aria-label="Learning journey progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow={completedCount * 20}><i style={{width:`${completedCount * 20}%`}}/></div></section>
       {error && <div className="error">{error}</div>}
-      <div className="sectionTitle"><div><p className="eyebrow">CHOOSE YOUR TRAINING</p><h2>Operator categories</h2></div><small>10 fresh questions per category</small></div>
-      <section className="grid">{CATEGORIES.map(cat => {
+      <div className="sectionTitle trainingTitle" id="training"><div><p className="eyebrow">PICK YOUR NEXT CHALLENGE</p><h2>Explore operator tracks</h2><p className="sectionSub">Choose a topic, pick an operator, and start practising.</p></div><span className="trackCount">{CATEGORIES.length} TRACKS <i/> {OPERATOR_COUNT} OPERATORS</span></div>
+      <section className="grid">{CATEGORIES.map((cat, categoryIndex) => {
         const p = progress.categories?.[cat.id] || {};
         return <article className="category" key={cat.id}>
-          <div className="catHead"><span className="catIcon" style={{background:cat.tint}}>{cat.icon}</span><span className={p.completed?"done":"count"}>{p.completed?"✓ COMPLETED":"10 QUESTIONS"}</span></div>
+          <div className="catHead"><span className="catIcon" style={{background:cat.tint}}>{cat.icon}</span><span className="catIndex">TRACK 0{categoryIndex + 1}</span></div>
           <h3>{cat.name}</h3><p>{cat.desc}</p>
+          <div className="operatorCaption"><span>CHOOSE AN OPERATOR</span><span>{cat.operators.length} {cat.operators.length === 1 ? "OPTION" : "OPTIONS"}</span></div>
           <div className="operatorList">
             {cat.operators.map(operator => {
               const session = getSavedSession(studentId, cat.id, operator);
               return <button key={operator} onClick={()=>startCategory(cat.id, operator, !!p.completed && !session)}>{operator}{session ? ` · Resume ${session.index + 1}/10` : ""}</button>;
             })}
           </div>
-          <div className="catFoot"><span>{p.correct || 0} correct · {p.xp || 0} XP</span><small>10 questions per operator</small></div>
+          <div className="catFoot"><span className={p.completed?"trackComplete":"trackProgress"}>{p.completed?"✓ TRACK CLEARED":"↗ KEEP BUILDING"}</span><span>{p.correct || 0} correct <i/> {p.xp || 0} XP</span></div>
         </article>;
       })}</section>
     </>}
